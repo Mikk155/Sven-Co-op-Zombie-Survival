@@ -35,12 +35,16 @@ string MaxMonstersAtTime = 20;
 #include "mikk/entities/utils"
 #include "mikk/entities/purchase_zone"
 
+// Multi-Language texts
+#include "multi_language/multi_language"
+
 // you can disable. it just help during testing
 #include "mikk/entities/game_debug"
 
 // Custom zombie by DrAbcrealone & Goodman3
 #include "mikk/npc/npc_zombie"
 
+// -TODO organice the arrays for make them give same category weapons for purchase zone.
 // Weapons pack and STARTS OF THE MESS!!!
 const array<string> ArrayPackNative =
 {
@@ -368,10 +372,14 @@ dictionary keyvalues;
 // Array for the weapons. so they can be set up dynamically.
 array<string> sWeapons;
 
+// Float for get the proper array case for purchase zone.
+float FloatGivenArray = 0;
+
+// -TODO hook for playerjoin for equip them with some ammo. so the given weapons had more than 1 clip :D
 void MapInit()
 {
-	// Purchase zone.
-	RegisterPurchaseZone();
+	// Multi-Language
+	MultiLanguageInit();
 	
 	// Custom zombie.
 	MonsterZombieCustom::Register();
@@ -382,6 +390,7 @@ void MapInit()
 	// Register new entities.
 	g_CustomEntityFuncs.RegisterCustomEntity( "sex_box", "mystery_box" );
 	g_CustomEntityFuncs.RegisterCustomEntity( "mystery_icon", "mystery_icon" );
+	g_CustomEntityFuncs.RegisterCustomEntity( "purchase_zone", "purchase_zone" );
 	
 	// Precache new entities.
 	g_Game.PrecacheOther( "monster_custom_zombie" );
@@ -395,87 +404,58 @@ void MapInit()
 		{
 			// Read and modify the proper array for this cases.
 			ReadArray( ArrayPackNative );
+			FloatGivenArray = 0;
 		}
 		break;
 
 		case 1:	// Afraid Of Monsters Weapons.-
 		{
-			// Their POSITION may be obsolete here but i don't really want to test it.
-			CoFKNIFE::POSITION = 11;
 			RegisterCoFKNIFE();
-			CoFSPEAR::POSITION = 16;
 			RegisterCoFSPEAR();
-			CoFHAMMER::POSITION = 13;
 			RegisterCoFHAMMER();
-			CoFDEAGLE::POSITION = 17;
 			RegisterCoFDEAGLE();
-			CoFGLOCK18::POSITION = 16;
 			RegisterCoFGLOCK18();
-			CoFP228::POSITION = 14;
 			RegisterCoFP228();
-			CoFMP5K::POSITION = 13;
 			RegisterCoFMP5K();
-			CoFAK74::POSITION = 14;
 			RegisterCoFAK74();
-			CoFBENELLI::POSITION = 12;
 			RegisterCoFBENELLI();
-			CoFL85::POSITION = 13;
 			RegisterCoFL85();
-			CoFANACONDA::POSITION = 18;
 			RegisterCoFANACONDA();
-			CoFUZI::POSITION = 14;
 			RegisterCoFUZI();
-			CoFBERETTA::POSITION = 10;
 			RegisterCoFBERETTA();
-			CoFGOLDEN::POSITION = 12;
 			RegisterCoFGOLDEN();
 			// not from AoM but to have both at same ammout of guns.
-			CoFAXE::POSITION = 18;
 			RegisterCoFAXE();
-			CoFM76::POSITION = 16;
 			RegisterCoFM76();
 
 			ReadArray( ArrayPackAoMDC );
+			FloatGivenArray = 1;
 		}
 		break;
 
 		case 2:	// Cry Of Fear Weapons.-
 		{	
 			RegisterCoFSWITCHBLADE();
-			CoFBRANCH::POSITION = 14;
 			RegisterCoFBRANCH();
-			CoFNIGHTSTICK::POSITION = 15;
 			RegisterCoFNIGHTSTICK();
 			RegisterCoFSLEDGEHAMMER();
-			CoFGLOCK::POSITION = 11;
 			RegisterCoFGLOCK();
-			CoFREVOLVER::POSITION = 13;
 			RegisterCoFREVOLVER();
-			CoFP345::POSITION = 15;
 			RegisterCoFP345();
-			CoFSHOTGUN::POSITION = 15;
 			RegisterCoFSHOTGUN();
-			CoFMP5::POSITION = 10;
 			RegisterCoFMP5();
-			CoFVP70::POSITION = 12;
 			RegisterCoFVP70();
-			CoFTMP::POSITION = 11;
 			RegisterCoFTMP();
-			CoFG43::POSITION = 15;
 			RegisterCoFGEWEHR();
-			CoFM16::POSITION = 10;
 			RegisterCoFM16();
-			CoFRIFLE::POSITION = 12;
 			RegisterCoFRIFLE(); // q? -Comment leaved here by gaftherman that asked "what?" into the .as while livesharing code. now going to full release.
-			CoFFAMAS::POSITION = 11;
 			RegisterCoFFAMAS();
 			// If you get this then GG ez game bro. both are strong weapons and also both have unlimited ammo x[
-			CoFCAMERA::POSITION = 11;
 			RegisterCoFCAMERA();
-			CoFBOOKLASER::POSITION = 10;
 			RegisterCoFBOOKLASER();
 
 			ReadArray( ArrayPackCoF );
+			FloatGivenArray = 2;
 		}
 		break;
 		
@@ -511,6 +491,7 @@ void MapInit()
 			CS16_M249::Register();
 
 			ReadArray( ArrayPackCs16 );
+			FloatGivenArray = 3;
 		}
 		break;
 
@@ -541,6 +522,7 @@ void MapInit()
 			INS2_M1928::Register();
 			
 			ReadArray( ArrayPackIns2WW2 );
+			FloatGivenArray = 4;
 		}
 		break;
 
@@ -568,7 +550,9 @@ void MapInit()
 			INS2_AT4::Register();
 			INS2_WEBLEY::Register();
 			INS2_DEAGLE::Register();
+			
 			ReadArray( ArrayPackIns2Modern );
+			FloatGivenArray = 5;
 		}
 		break;
 
@@ -598,6 +582,7 @@ void MapInit()
 			INS2_M2FLAMETHROWER::Register();
 
 			ReadArray( ArrayPackIns2Alt );
+			FloatGivenArray = 6;
 		}
 		break;
 	}
@@ -711,14 +696,203 @@ void SetRounds()
 	ForPlayers( 0 );
 }
 
+// Start of Classes
+
+HUDTextParams FragsCountHudText;
+
+class purchase_zone : ScriptBaseEntity
+{
+	private string Sound = "mikk/misc/shop.wav";
+	bool KeyValue( const string& in szKey, const string& in szValue ) 
+	{
+		if( szKey == "minhullsize" ) 
+		{
+			g_Utility.StringToVector( self.pev.vuser1, szValue );
+			return true;
+		} 
+		else if( szKey == "maxhullsize" ) 
+		{
+			g_Utility.StringToVector( self.pev.vuser2, szValue );
+			return true;
+		}
+		else 
+			return BaseClass.KeyValue( szKey, szValue );
+	}
+	
+	void Spawn() 
+	{
+        self.Precache();
+
+        self.pev.movetype = MOVETYPE_NONE;
+        self.pev.solid = SOLID_NOT;
+		self.pev.effects |= EF_NODRAW;
+
+        if( self.GetClassname() == "purchase_zone" && string( self.pev.model )[0] == "*" && self.IsBSPModel() )
+        {
+            g_EntityFuncs.SetModel( self, self.pev.model );
+            g_EntityFuncs.SetSize( self.pev, self.pev.mins, self.pev.maxs );
+        }
+		else
+		{
+			g_EntityFuncs.SetSize( self.pev, self.pev.vuser1, self.pev.vuser2 );		
+		}
+
+		g_EntityFuncs.SetOrigin( self, self.pev.origin );
+		
+		if( !self.pev.SpawnFlagBitSet( 1 ) )
+		{	
+			SetThink( ThinkFunction( this.TriggerThink ) );
+			self.pev.nextthink = g_Engine.time + 0.1f;
+		}
+
+		CurrentFrags();
+		
+        BaseClass.Spawn();
+	}
+
+	void Precache()
+	{
+		g_Game.PrecacheGeneric( "sound/" + Sound );
+		g_SoundSystem.PrecacheSound( Sound );
+		
+		if( !string( self.pev.netname ).IsEmpty() )
+			g_Game.PrecacheOther( self.pev.netname );
+		if( !string( self.pev.message ).IsEmpty() )
+			g_Game.PrecacheOther( self.pev.message );
+	
+		BaseClass.Precache();
+	}
+
+    void Use(CBaseEntity@ pActivator, CBaseEntity@ pCaller, USE_TYPE useType, float value)
+    {
+		if( self.pev.SpawnFlagBitSet( 1 ) )
+		{	
+			SetThink( ThinkFunction( this.TriggerThink ) );
+			self.pev.nextthink = g_Engine.time + 0.1f;
+		}
+	}
+	
+	void TriggerThink() 
+	{
+		for( int iPlayer = 1; iPlayer <= g_PlayerFuncs.GetNumPlayers(); ++iPlayer )
+		{
+			CBasePlayer@ pPlayer = g_PlayerFuncs.FindPlayerByIndex( iPlayer );
+
+			if( pPlayer is null or !pPlayer.IsConnected() )
+				continue;
+
+			if( UTILS::InsideZone( pPlayer, self ) )
+			{
+				if( pPlayer.HasNamedPlayerItem( self.pev.netname ) )
+				{
+					g_EntityFuncs.FireTargets( "DISCOUNT_PRICE", pPlayer, pPlayer, USE_ON );
+				}
+				else
+				{
+					g_EntityFuncs.FireTargets( "ORIGINAL_PRICE", pPlayer, pPlayer, USE_ON );
+				}
+
+				if( pPlayer.pev.button & IN_USE != 0 )
+				{
+					if( !string( self.pev.message ).IsEmpty() 
+					and pPlayer.HasNamedPlayerItem( self.pev.netname ) !is null
+					and pPlayer.pev.frags >= self.pev.frags * 0.4 )
+					{
+						pPlayer.pev.frags -= self.pev.frags * 0.4;
+						
+						g_SoundSystem.EmitSound( self.edict(), CHAN_STATIC, Sound, 1.0f, ATTN_NONE );
+						
+						keyvalues ["origin"] = pPlayer.GetOrigin().ToString();
+						keyvalues ["m_flCustomRespawnTime"] = "-1";
+						if( FloatGivenArray == 0 )	// Native
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+						if( FloatGivenArray == 1 )	// AoM
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+						if( FloatGivenArray == 2 )	// CoF
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+						if( FloatGivenArray == 3 )	// CS16
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+						if( FloatGivenArray == 4 )	// ins2 WW2
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+						if( FloatGivenArray == 5 )	// ins2 Modern
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+						if( FloatGivenArray == 6 )	// ins2 Alt
+							g_EntityFuncs.CreateEntity( KeyPackZero, keyvalues, true );
+					}
+
+					if( pPlayer.pev.frags >= self.pev.frags )
+					{
+						pPlayer.pev.frags -= self.pev.frags;
+
+						g_SoundSystem.EmitSound( self.edict(), CHAN_STATIC, Sound, 1.0f, ATTN_NONE );
+
+						if( !string( self.pev.netname ).IsEmpty() and pPlayer.HasNamedPlayerItem( self.pev.netname ) is null )
+						{
+							keyvalues ["origin"] = pPlayer.GetOrigin().ToString();
+							keyvalues ["m_flCustomRespawnTime"] = "-1";
+							g_EntityFuncs.CreateEntity( self.pev.netname, keyvalues, true );	// -TODO Ditto.
+						}
+
+						if( !string( self.pev.target ).IsEmpty() )
+						{
+							g_EntityFuncs.FireTargets( self.pev.target, pPlayer, pPlayer, USE_TOGGLE );
+						}
+
+						if( self.pev.SpawnFlagBitSet( 2 ) )
+						{
+							g_EntityFuncs.Remove( self );
+						}
+					}
+				}
+			}
+		}
+		
+		// 0.1 frames make you buy twice or more if hold E for a moment
+		self.pev.nextthink = g_Engine.time + 0.3f;
+	}
+
+	void CurrentFrags( CBasePlayer@ pPlayer )
+	{
+		keyvalues =	
+		{
+			{ "message", "Cost: "+int(self.pev.frags * 0.4)+" (60% off) \n You have: "+int(pPlayer.pev.frags)+"\n"},
+			{ "message_spanish", "Costo: "+int(self.pev.frags * 0.4)+" (60% descuento) \n Tu tienes: "+int(pPlayer.pev.frags)+"\n"},
+			{ "x", "-1"},
+			{ "y", "0.40"},
+			{ "holdtime", "0.5"},
+			{ "fadein", "0.0"},
+			{ "channel", "1"},
+			{ "spawnflags", "1"},
+			{ "color", "255 0 0"},
+			{ "targetname", "DISCOUNT_PRICE" } // -TODO asignar un nombre unico por entidad. idk como se hace.
+		};
+		g_EntityFuncs.CreateEntity( "game_text_custom", keyvalues, true );
+		
+		keyvalues =	
+		{
+			{ "message", "Cost: "+int(self.pev.frags)+" \n You have: "+int(pPlayer.pev.frags)+"\n"},
+			{ "message_spanish", "Costo: "+int(self.pev.frags)+" \n Tu tienes: "+int(pPlayer.pev.frags)+"\n"},
+			{ "x", "-1"},
+			{ "y", "0.40"},
+			{ "holdtime", "0.5"},
+			{ "fadein", "0.0"},
+			{ "channel", "1"},
+			{ "spawnflags", "1"},
+			{ "color", "255 0 0"},
+			{ "targetname", "ORIGINAL_PRICE" }
+		};
+		g_EntityFuncs.CreateEntity( "game_text_custom", keyvalues, true );
+	}
+}
+
 class sex_box : ScriptBaseEntity  
 {
-	bool WpnBoxDisabled = false;
 	// -TODO buscar/robar sonidos
 	private string strOpenSound = "ambience/particle_suck2.wav";
 
 	void Use(CBaseEntity@ pActivator, CBaseEntity@ pCaller, USE_TYPE useType, float flValue)
 	{
+		// -TODO crear efectos.
 		//g_SoundSystem.EmitSound( self.edict(), CHAN_ITEM, strOpenSound, 1.0f, ATTN_NORM );
 
 		float flRandom = Math.RandomFloat( 0, 1 );
@@ -745,7 +919,7 @@ class sex_box : ScriptBaseEntity
 		
 		g_EntityFuncs.SetOrigin( self, self.pev.origin );
 		g_EntityFuncs.SetModel( self, "models/mikk/misc/mysterybox.mdl" );
-		g_EntityFuncs.SetSize( self.pev, Vector( -30, -16, -16 ), Vector( 30, 16, 16 ) );
+		g_EntityFuncs.SetSize( self.pev, Vector( -27, -0, -16 ), Vector( 27, 29, 15 ) );
 		
 	    BaseClass.Spawn();
 	}
@@ -755,16 +929,15 @@ class sex_box : ScriptBaseEntity
 		g_Game.PrecacheModel( "models/mikk/misc/mysterybox.mdl" );
 		g_Game.PrecacheGeneric( "models/mikk/misc/mysterybox.mdl" );
 
-		g_SoundSystem.PrecacheSound( strStartSound );
-		g_SoundSystem.PrecacheSound( strMusicSound );
+		g_SoundSystem.PrecacheSound( strOpenSound );
 
-		g_Game.PrecacheGeneric( "sound/" + strStartSound );
-		g_Game.PrecacheGeneric( "sound/" + strMusicSound );
+		g_Game.PrecacheGeneric( "sound/" + strOpenSound );
 
 		BaseClass.Precache();
 	}
 }
 
+// -TODO npc should have a small chance to generate this.
 class mystery_icon : ScriptBaseEntity  
 {
 	bool IsDisabled = false;
@@ -779,7 +952,9 @@ class mystery_icon : ScriptBaseEntity
 
 		g_EntityFuncs.SetModel( self, "models/mikk/misc/limitless_potential.mdl" );
 
-		g_EntityFuncs.SetSize( self.pev, Vector( -16, -16, -16 ), Vector( 16, 16, 16 ) );
+		g_EntityFuncs.SetSize( self.pev, Vector( -32, -32, -32 ), Vector( 32, 32, 32 ) );
+		
+		// -TODO Fadethink SetTimeout after 30 seconds.
 		
 	    BaseClass.Spawn();
 	}
@@ -800,6 +975,7 @@ class mystery_icon : ScriptBaseEntity
 		IsDisabled = true; // cuz Touch activates it twice or more. idk
 		CBaseEntity@ pTronal = null;
 
+		// -TODO Custom sounds per each case.
 		switch (Math.RandomLong( 0, 9 ))
 		{
 			case 0:		//	restock ammo 
