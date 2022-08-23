@@ -381,156 +381,145 @@ namespace MonsterZombieCustom
 		{
 			Precache();
 			
-			switch (Math.RandomLong( 0, 20 ))
+			if( self.pev.targetname == "small" )
 			{
-				case 0:
+				switch (Math.RandomLong( 0, 1 ))
 				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slower.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-					self.SetBodygroup(0, Math.RandomLong( 0, 5 ));
+					case 0:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/baby.mdl");
+						g_EntityFuncs.SetSize(self.pev, Vector(-16, -16, 0), Vector(16, 16, 36));
+					}
+					break;
 				}
-				break;
+			}
+			else if( self.pev.targetname == "taller" )
+			{
+				g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/taller.mdl");
+				g_EntityFuncs.SetSize(self.pev, Vector(-20, -20, 0), Vector(20, 20, 128));
+			}
+			else
+			{
+				switch (Math.RandomLong( 0, 18 ))
+				{
+					case 0:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slower.mdl");
+						self.SetBodygroup(0, Math.RandomLong( 0, 5 ));
+					}
+					break;
 
-				case 1:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/sewmo.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 1:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/sewmo.mdl");
+					}
+					break;
 
-				case 2:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slower3.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 2:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slower3.mdl");
+					}
+					break;
 
-				case 3:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slowerno.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 3:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slowerno.mdl");
+					}
+					break;
 
-				case 4:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/tenslower.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-					self.SetBodygroup(0, Math.RandomLong( 0, 5 ));
-				}
-				break;
+					case 4:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/tenslower.mdl");
+						self.SetBodygroup(0, Math.RandomLong( 0, 5 ));
+					}
+					break;
 
-				case 5:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/psycho.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 5:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/psycho.mdl"); 
+					}
+					break;
 
-				case 6:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faceless.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 6:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faceless.mdl"); 
+					}
+					break;
 
-				case 7:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faceless3.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 7:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faceless3.mdl"); 
+					}
+					break;
 
-				case 8:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/runningcrazy.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 8:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/runningcrazy.mdl"); 
+					}
+					break;
 
-				case 9:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/hammer.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 9:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/hammer.mdl"); 
+					}
+					break;
 
-				case 10:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faster3.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 10:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faster3.mdl"); 
+					}
+					break;
 
-				case 11:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faster.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 11:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faster.mdl"); 
+					}
+					break;
 
-				case 12:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/crazyrumpel.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 12:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/crazyrumpel.mdl"); 
+					}
+					break;
 
-				case 13:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/citalopram.mdl"); 
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 13:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/citalopram.mdl"); 
+					}
+					break;
 
-				case 14:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/baby.mdl");
-					g_EntityFuncs.SetSize(self.pev, Vector(-16, -16, 0), Vector(16, 16, 36));
-				}
-				break;
+					case 14:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/krypandenej.mdl");
+					}
+					break;
 
-				case 15:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slower2.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-					self.SetBodygroup(0, Math.RandomLong( 0, 2 ));
-				}
-				break;
+					case 15:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/slower2.mdl");
+						self.SetBodygroup(0, Math.RandomLong( 0, 2 ));
+					}
+					break;
 
-				case 16:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/children.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 16:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/children.mdl");
+					}
+					break;
 
-				case 17:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faceless2.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
+					case 17:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/faceless2.mdl");
+					}
+					break;
 
-				case 18:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/krypande.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
+					case 18:
+					{
+						g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/krypande.mdl");
+					}
+					break;
 				}
-				break;
-
-				case 19:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/krypandenej.mdl");
-					g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
-				}
-				break;
-
-				case 20:
-				{
-					g_EntityFuncs.SetModel(self, "models/mikk/cryoffear/taller.mdl");
-				}
-				break;
+				g_EntityFuncs.SetSize(self.pev, VEC_HUMAN_HULL_MIN, VEC_HUMAN_HULL_MAX);
 			}
 			
 			self.m_FormattedName = "Zombie";
@@ -553,17 +542,6 @@ namespace MonsterZombieCustom
 	},
 		-TODO
 */
-			//self.pev.ShouldFadeOnDeath( false ); // que no desaparezca al morir -TODO
-			for( int playerID = 1; playerID <= g_Engine.maxClients; playerID++ )
-			{
-				CBasePlayer@ pPlayer = g_PlayerFuncs.FindPlayerByIndex( playerID );
-
-				if( pPlayer is null || !pPlayer.IsAlive() )
-					continue;
-
-				self.m_hEnemy				= pPlayer;
-			}
-			
 			self.pev.solid				= SOLID_SLIDEBOX;
 			self.pev.movetype			= MOVETYPE_STEP;
 			self.m_bloodColor			= BLOOD_COLOR_RED;
@@ -577,7 +555,6 @@ namespace MonsterZombieCustom
 			self.MonsterInit();
 		}
 
-		// nada
 		void Precache()
 		{
 			g_Game.PrecacheModel("models/mikk/cryoffear/slower.mdl");
