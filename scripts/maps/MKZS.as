@@ -389,7 +389,7 @@ void MapInit()
 	g_Game.PrecacheOther( "mystery_box" );
 
 	// Randomly register weapons each map starts.
-	switch (Math.RandomLong( 0, 1 ))
+	switch (Math.RandomLong( 0, 6 ))
 	{
 		case 0:	// Native Sven Co-op Weapons.-
 		{
